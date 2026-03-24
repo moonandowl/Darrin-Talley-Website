@@ -12,6 +12,42 @@
   gtag('js', new Date());
   gtag('config', 'G-CGZMC9JDNQ');
 </script>
+<script>
+(function () {
+  const milestones = [25, 50, 75];
+  const fired = new Set();
+
+  function getScrollPercent() {
+    const scrollTop = window.scrollY || window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+    if (docHeight <= 0) return 100;
+    return (scrollTop / docHeight) * 100;
+  }
+
+  function trackScrollDepth() {
+    const scrollPercent = getScrollPercent();
+
+    milestones.forEach(function (milestone) {
+      if (scrollPercent >= milestone && !fired.has(milestone)) {
+        fired.add(milestone);
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'scroll_' + milestone, {
+            percent_scrolled: milestone
+          });
+        }
+      }
+    });
+
+    if (fired.size === milestones.length) {
+      window.removeEventListener('scroll', trackScrollDepth);
+    }
+  }
+
+  window.addEventListener('scroll', trackScrollDepth);
+})();
+</script>
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
