@@ -18,7 +18,7 @@
   const fired = new Set();
 
   function getScrollPercent() {
-    const scrollTop = window.scrollY || window.pageYOffset;
+    const scrollTop = window.scrollY || window.pageYOffset || 0;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 
     if (docHeight <= 0) return 100;
@@ -36,6 +36,7 @@
           gtag('event', 'scroll_' + milestone, {
             percent_scrolled: milestone
           });
+          console.log('GA4 event fired:', 'scroll_' + milestone);
         }
       }
     });
@@ -45,7 +46,8 @@
     }
   }
 
-  window.addEventListener('scroll', trackScrollDepth);
+  window.addEventListener('scroll', trackScrollDepth, { passive: true });
+  window.addEventListener('load', trackScrollDepth);
 })();
 </script>
 <!-- Meta Pixel Code -->
